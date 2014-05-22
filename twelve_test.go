@@ -17,19 +17,12 @@ func TestString(t *testing.T) {
 	}
 }
 
-func catchExpectedPanic(t *testing.T) {
-	if err := recover(); err != nil {
-		t.Log(err)
-	}
-}
-
 func TestBool(t *testing.T) {
 	tests := map[string]bool{
 		"bool_true":  true,
 		"bool_false": false,
 		"bool_fail":  false}
 
-	defer catchExpectedPanic(t)
 	for envar, exp := range tests {
 		if result, err := Bool(envar); result != exp {
 			t.Errorf("wanted %v got %v", exp, result)
