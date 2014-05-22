@@ -3,25 +3,39 @@ package twelve
 import "testing"
 
 func TestInitialize(t *testing.T) {
-        SetPrefix("twelve")
+	SetPrefix("twelve")
 }
 
 func TestString(t *testing.T) {
-        exp := "test value one"
-        v := String("string1")
-        if *v != exp {
-                t.Errorf("wanted %q got %q", exp, *v)
-        }
+	tests := map[string]string{"string1": "test value one"}
+	for envar, exp := range tests {
+		if result, err := String(envar); result != exp {
+			t.Errorf("wanted %q got %q", exp, result)
+		} else if err != nil && err == ErrNotSet {
+			t.Error(err)
+		}
+	}
 }
 
-func TestStringVar(t *testing.T) {
-        t.Log("no test yet")
+func catchExpectedPanic(t *testing.T) {
+	if err := recover(); err != nil {
+		t.Log(err)
+	}
 }
 
 func TestBool(t *testing.T) {
-        t.Log("no test yet")
-}
+	tests := map[string]bool{
+		"bool_true":  true,
+		"bool_false": false,
+		"bool_fail":  false}
 
-func TestBoolVar(t *testing.T) {
-        t.Log("no test yet")
+	defer catchExpectedPanic(t)
+	for envar, exp := range tests {
+		if result, err := Bool(envar); result != exp {
+			t.Errorf("wanted %v got %v", exp, result)
+		} else if err != nil && err == ErrNotSet {
+			t.Error(err)
+		}
+
+	}
 }
